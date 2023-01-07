@@ -12,7 +12,7 @@ from audiodiffusion import AudioDiffusion
 device = "cuda" if torch.cuda.is_available() else "cpu"
 generator = torch.Generator(device=device)
 
-model = "C:/Users/moise/Desktop/AI/audio-diffusion/checkpoints/ukdrill_256x256"
+model = "/path/to/audio/diffusion/model"
 
 audio_diffusion = AudioDiffusion(model_id=model)
 mel = audio_diffusion.pipe.mel
