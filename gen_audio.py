@@ -17,10 +17,11 @@ model = "C:/Users/moise/Desktop/AI/audio-diffusion/checkpoints/ukdrill_256x256"
 audio_diffusion = AudioDiffusion(model_id=model)
 mel = audio_diffusion.pipe.mel
 
-num_samples = 100
+num_samples = 1
 num_steps = 75
 width_mult = 11 # multiplicator for noise input width
-noise_input = torch.randn(1, 1, 256, 256*width_mult).cuda() # multiples of 256 (batch size, 1, height, width)
+noise_input = torch.randn(1, 1, audio_diffusion.pipe.unet.sample_size[0],
+                        audio_diffusion.pipe.unet.sample_size[1] * width_mult).cuda() # multiples of 256 (batch size, 1, height, width)
 
 ### Run model inference to generate mel spectrogram, audios and loops
 for i in range(num_samples):
@@ -29,8 +30,10 @@ for i in range(num_samples):
     generator.manual_seed(seed)
     image, (sample_rate,
             audio) = audio_diffusion.generate_spectrogram_and_audio(
-                generator=generator, steps=num_steps, noise=noise_input, eta=0.5)
-
+                generator=generator,
+                steps=num_steps,
+                noise=noise_input,
+                eta=1)
     # Normalize audio
     audio /= np.max(np.abs(audio),axis=0)
     # Write audio to disk
